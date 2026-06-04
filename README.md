@@ -2,7 +2,7 @@
 Nama: Irsa Fairuza  
 NRP: 5027251115
 ## Soal 2
-Untuk memulai pembuatan bochs kita mengisi fungsi getChar_ di file kernel.c dengan kode sebagai berikut
+Untuk memulai pembuatan bochs kita mengisi fungsi `getChar_ ` di file kernel.c dengan kode sebagai berikut
 ```c
 mov ah, 0       ; Menyiapkan instruksi BIOS untuk menunggu tombol ditekan
 int 0x16        ; Memanggil interupsi keyboard (Interrupt 16h)
@@ -50,7 +50,7 @@ void clearScreen() {
     cursor = 0;
 }
 ```
-Selanjutnya fungsi ini sebagai pencetak kata atau kalimat panjang dengan melakukan looping untuk mencetak huruf satu per satu sampai bertemu karakter '/0' yang menandakan kalimatnya sudah selesai. Lalu dibawahnya yaitu fungsi seperti penghapusan, ia akan menimpa semua kotak di layar dengan spasi kosong (' '). Setelah layarnya bersih, kursornya dikembalikan lagi ke angka 0 (pojok kiri atas) biar siap dipakai ngetik dari awal lagi.
+Selanjutnya fungsi ini sebagai pencetak kata atau kalimat panjang dengan melakukan looping untuk mencetak huruf satu per satu sampai bertemu karakter `/0` yang menandakan kalimatnya sudah selesai. Lalu dibawahnya yaitu fungsi seperti penghapusan, ia akan menimpa semua kotak di layar dengan spasi kosong (' '). Setelah layarnya bersih, kursornya dikembalikan lagi ke angka 0 (pojok kiri atas) biar siap dipakai ngetik dari awal lagi.
 
 ```c
 void readString(char* buf) {
@@ -90,8 +90,8 @@ int strcmp(char* s1, char* s2) {
 }
 ```
 Lalu untuk menangkap ketikan dari user menggunakan loop while(1) dimana ini akan terus berjalan dengan beberapa perintah yaitu:  
-- Enter (\n atau \n) = akan memberikan tanda penutup (\0) dan keluar melalui break
-- Backspace (\b) = akan memundurkan kursor di layar dan menghapus ketikan dengan menimpanya pakai spasi
+- Enter (`\n` atau `\r`) = akan memberikan tanda penutup (\0) dan keluar melalui break
+- Backspace (`\b`) = akan memundurkan kursor di layar dan menghapus ketikan dengan menimpanya pakai spasi
 - Ngetik seperti yang ditampilkan di layar menggunakan printChar
 Selain itu fungsi lainnya berguna untuk menyocokan dua kata (misal menyocokan ketikan dengan kata "help")
 
@@ -173,7 +173,7 @@ Fungsi intToString bertugas mengonversi tipe data integer menjadi string agar ha
             printString("Command not found!");
         }
 ```
-Selanjutnya fungsi ini bertugas sebagai menyocokan input pengguna dengan strcmp dgn membandingkannya dengan daftar instruksi yang valid. Apabila mengembalikan nilai true(1) sistem akan eksekusi instruksi yang sesuai seperti mencetak balasan melalui printString atau memanggil fungsi clearScreen() untuk mengosongkan layar. Jika input tidak valid, maka akan diberi pesan peringatan "Command not found!"
+Selanjutnya fungsi ini bertugas sebagai menyocokan input pengguna dengan strcmp dgn membandingkannya dengan daftar instruksi yang valid. Apabila mengembalikan nilai true(1) sistem akan eksekusi instruksi yang sesuai seperti mencetak balasan melalui printString atau memanggil fungsi `clearScreen()` untuk mengosongkan layar. Jika input tidak valid, maka akan diberi pesan peringatan "Command not found!"
 
 ## Permasalahan yang ada
 <img width="1919" height="944" alt="image" src="https://github.com/user-attachments/assets/3e3b2b8f-68cc-4fa4-98d0-05ab21ef50c8" />
@@ -181,6 +181,58 @@ Selanjutnya fungsi ini bertugas sebagai menyocokan input pengguna dengan strcmp 
 Saat membuka bochs yang keluar hanya tampilan hitam pada bochs tanpa tulisan dan tidak dapat menulis suatu perintah
 
 ### Solusi
-Untuk mengatasinya adalah dengan menggunakan instruksi yang lain yaitu 'qemu-system-i386 -fda floppy.img -display curses' dengan tampilan sebagai berikut
+Untuk mengatasinya adalah dengan menggunakan instruksi yang lain yaitu `qemu-system-i386 -fda floppy.img -display curses` dengan tampilan sebagai berikut
 
 <img width="1719" height="903" alt="image" src="https://github.com/user-attachments/assets/fd587676-07a6-4bfe-ac67-0b9373bc9804" />
+
+## Revisi
+Pada pengerjaan yang saya lakukan belum berhasil melakukan operasi matematikanya, seperti add, sub, fac. Untuk memperbaikinya perlu kode tambahan pada bagian main() dengan kode sebagai berikut
+
+```c
+else if (startsWith(cmd, "add ")) {
+            i = 4;
+            a = atoi(&cmd[i]);
+            while (cmd[i] != ' ' && cmd[i] != '\0') i++;
+            while (cmd[i] == ' ' && cmd[i] != '\0') i++;
+            b = atoi(&cmd[i]);
+
+            result = a + b;
+            intToString(result, resStr);
+            printString(resStr);
+```
+
+Bagian ini berfungsi untuk melihat apakah ada perintah penjumlahan dan mengambil dua angka yang diketik user. Lalu karena input masih berupa string, maka sistem mengubah angka tersebut satu per satu pakai indeks i.
+
+```c
+else if (startsWith(cmd, "sub ")) {
+            i = 4;
+            a = atoi(&cmd[i]);
+            while (cmd[i] != ' ' && cmd[i] != '\0') i++;
+            while (cmd[i] == ' ' && cmd[i] != '\0') i++;
+            b = atoi(&cmd[i]);
+
+            result = a - b;
+            if (result < 0) {
+                printString("-");
+                result = result * -1;
+            }
+            intToString(result, resStr);
+            printString(resStr);
+```
+Selanjutnya kode ini cara kerjanya mirip dengan yang sebelumnya, perbedaannya terletak di operasinya yaitu pengurangan, disini sistem hanya menangani hasil perhitungan yang nilainya negatif dengan cara mengakali fungsi `intToString`
+
+```c
+else if (startsWith(cmd, "fac ")) {
+            i = 4;
+            n = atoi(&cmd[i]);
+            result = factorial(n);
+            intToString(result, resStr);
+            printString(resStr);
+        }
+```
+Kode ini berfungsi untuk mendeteksi perintah perhitungan faktorial dan mengeksekusinya.
+
+## Hasil
+<img width="1919" height="1002" alt="image" src="https://github.com/user-attachments/assets/c11ad9fa-b911-47ae-8a8c-cb2300b7313d" />
+
+Ini merupakan hasil setelah melakukan beberapa perintah
