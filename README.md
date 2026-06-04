@@ -161,3 +161,26 @@ void intToString(int n, char* buf) {
 ```
 
 Fungsi intToString bertugas mengonversi tipe data integer menjadi string agar hasilnya bisa ditampilkan di layar
+
+```c
+ if (strcmp(cmd, "check")) {
+            printString("ok");
+        } else if (strcmp(cmd, "help")) {
+            printString("check add sub fac season triangle clear about");
+        } else if (strcmp(cmd, "clear")) {
+            clearScreen();
+        } else if (cmd[0] != '\0') {
+            printString("Command not found!");
+        }
+```
+Selanjutnya fungsi ini bertugas sebagai menyocokan input pengguna dengan strcmp dgn membandingkannya dengan daftar instruksi yang valid. Apabila mengembalikan nilai true(1) sistem akan eksekusi instruksi yang sesuai seperti mencetak balasan melalui printString atau memanggil fungsi clearScreen() untuk mengosongkan layar. Jika input tidak valid, maka akan diberi pesan peringatan "Command not found!"
+
+## Permasalahan yang ada
+<img width="1919" height="944" alt="image" src="https://github.com/user-attachments/assets/3e3b2b8f-68cc-4fa4-98d0-05ab21ef50c8" />
+
+Saat membuka bochs yang keluar hanya tampilan hitam pada bochs tanpa tulisan dan tidak dapat menulis suatu perintah
+
+### Solusi
+Untuk mengatasinya adalah dengan menggunakan instruksi yang lain yaitu 'qemu-system-i386 -fda floppy.img -display curses' dengan tampilan sebagai berikut
+
+<img width="1719" height="903" alt="image" src="https://github.com/user-attachments/assets/fd587676-07a6-4bfe-ac67-0b9373bc9804" />
